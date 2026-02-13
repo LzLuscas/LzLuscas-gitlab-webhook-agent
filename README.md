@@ -14,6 +14,13 @@ API em FastAPI para receber e processar webhooks do GitLab. Ideal para integrar 
 - Python 3.10 ou superior
 - pip
 
+## Instalação com Docker
+
+Para facilitar a execução e o desenvolvimento, o projeto inclui uma configuração com [Docker e Docker Compose](https://docs.docker.com/engine/install/).
+
+Estas serão as dependências necessárias na sua máquina. Se você já tem o Docker instalado, poderá seguir as instruções abaixo para rodar a aplicação usando Docker.
+
+[Leia mais sobre a instalação com Docker](./docs/running-with-docker.md)
 ## Instalação
 
 1. Clone o repositório:
