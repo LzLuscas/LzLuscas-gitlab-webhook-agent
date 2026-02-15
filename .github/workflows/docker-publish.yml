@@ -83,6 +83,25 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+        # Run Docker Scout to check for vulnerabilities and get recommendations.
+        #     For the latest built image, display:
+
+        # - the vulnerabilities (ignoring the base image, displaying
+        #   all vulnerabilities with a fix available)
+        # - the available recommendations
+        # - compare it to the latest image indexed for the same repository (only
+        #   displaying unchanged packages and vulnerabilities that already have a fix)
+
+      - name: Docker Scout
+        id: docker-scout
+        uses: docker/scout-action@v1
+        with:
+          command: cves,recommendations,compare
+          to-latest: true
+          ignore-base: true
+          ignore-unchanged: false
+          only-fixed: true
+
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
