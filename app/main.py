@@ -1,3 +1,5 @@
+"""Aplicação FastAPI para receber webhooks do GitLab."""
+
 from fastapi import FastAPI
 from app.routes.gitlab import router as gitlab_router
 
@@ -9,6 +11,8 @@ app = FastAPI(
 
 app.include_router(gitlab_router)
 
+
 @app.get("/")
 def health_check():
+    """Responde com status ok para verificação de disponibilidade da API."""
     return {"status": "ok"}

@@ -1,3 +1,5 @@
+"""Configuração e variáveis de ambiente da aplicação."""
+
 import os
 from dotenv import load_dotenv
 
