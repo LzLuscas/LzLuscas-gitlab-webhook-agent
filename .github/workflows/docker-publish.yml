@@ -83,6 +83,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # make sure to set to load, so the image is available locally for Docker Scout
           load: ${{ github.event_name == 'pull_request' }}
 
         # Run Docker Scout to check for vulnerabilities and get recommendations.
@@ -99,12 +100,17 @@ jobs:
         uses: docker/scout-action@v1
         if: ${{ github.event_name == 'pull_request' }}
         with:
-          image: ${{ steps.meta.outputs.tags }}
           command: quickview,compare,cves,recommendations
+          # the loaded image from the build
+          image: ${{ steps.meta.outputs.tags }}
+          # the latest image from the registry
           to: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+          # Docker Hub credentials for Docker Scout
           dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}
-          registry-user: LuisDevLipe
+          # ghcr.io credentials for pulling the latest indexed image for comparison in Docker Scout
+          registry-user: ${{ github.actor }}
           registry-password: ${{ secrets.GITHUB_TOKEN }}
 
 
