@@ -99,6 +99,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         with:
           command: quickview,compare
+          to-latest: true
           dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}
 
