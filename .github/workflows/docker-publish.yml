@@ -101,8 +101,7 @@ jobs:
         with:
           image: ${{ steps.meta.outputs.tags }}
           command: quickview,compare,cves,recommendations
-          to-latest: true
-          organization: ${{ github.repository_owner }}
+          to: latest
           dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}
 
