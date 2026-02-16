@@ -104,6 +104,8 @@ jobs:
           to: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry-user: ${{ github.actor }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
 
 
       # Sign the resulting Docker image digest except on PRs.
