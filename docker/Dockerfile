@@ -1,16 +1,17 @@
-FROM python:3.13 AS builder
+FROM python:3.13.5 AS builder
 WORKDIR /app
 COPY --chmod=0110 requirements.txt requirements.txt
 
+RUN pip install --upgrade pip setuptools wheel
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM builder AS deps
 # install curl with soar for health checks
 RUN wget -qO- "https://raw.githubusercontent.com/pkgforge/soar/main/install.sh" | sh
 RUN export PATH="$PATH:/usr/local/bin:/opt/soar/bin"
+RUN soar install curl
 
-RUN soar install curl  
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-FROM gcr.io/distroless/python3-debian13:debug-nonroot AS runtime
+FROM gcr.io/distroless/python3-debian13:nonroot AS runtime
 WORKDIR /
 
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
@@ -22,7 +23,7 @@ COPY --chown=nonroot:nonroot --chmod=0550 ./app ./app
 
 # bring curl to the runtime image for health checks
 # r-- permissions for nonroot user.
-COPY --from=builder --chown=nonroot:nonroot --chmod=0110 /root/.local/share/soar/bin/curl /usr/bin/curl
+COPY --from=deps --chown=nonroot:nonroot --chmod=0110 /root/.local/share/soar/bin/curl /usr/bin/curl
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD [ "curl", "-f", "http://localhost:8080/" ]
